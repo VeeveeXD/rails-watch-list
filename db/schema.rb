@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_21_120905) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_22_083541) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "bookmark", force: :cascade do |t|
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.bigint "list_id", null: false
+    t.bigint "movie_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["list_id"], name: "index_bookmark_on_list_id"
+    t.index ["movie_id"], name: "index_bookmark_on_movie_id"
+  end
 
   create_table "bookmarks", force: :cascade do |t|
     t.text "comment"
@@ -24,9 +34,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_120905) do
     t.index ["movie_id"], name: "index_bookmarks_on_movie_id"
   end
 
+  create_table "list", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "movie", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "overview"
+    t.string "poster_url"
+    t.float "rating"
+    t.string "title"
     t.datetime "updated_at", null: false
   end
 
@@ -39,6 +64,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_120905) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "bookmark", "lists"
+  add_foreign_key "bookmark", "movies"
   add_foreign_key "bookmarks", "lists"
   add_foreign_key "bookmarks", "movies"
 end
